@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<java version="19.0.2" class="java.beans.XMLDecoder">
+ <object class="com.blps.entity.User">
+  <void property="id">
+   <long>3</long>
+  </void>
+  <void property="password">
+   <string>$2a$04$m1yHSwqj4mUCEYhbiH4yOOkY5GOXryyTdDq8nveCJEB87AzNbvT2W</string>
+  </void>
+  <void property="role">
+   <object class="java.lang.Enum" method="valueOf">
+    <class>com.blps.entity.Role</class>
+    <string>OWNER</string>
+   </object>
+  </void>
+  <void property="username">
+   <string>elf06</string>
+  </void>
+ </object>
+</java>
