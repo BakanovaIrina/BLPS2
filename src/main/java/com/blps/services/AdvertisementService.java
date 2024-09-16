@@ -8,6 +8,7 @@ import com.blps.repository.AdvertisementRepository;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -17,6 +18,7 @@ public class AdvertisementService {
     @Autowired
     AdvertisementRepository advertisementRepository;
 
+    @Transactional(transactionManager = "transactionManager")
     public void createAdvertisement(@NonNull AdvertisementRequest request, Long owner_id){
         Advertisement newAdvert = new Advertisement();
 
