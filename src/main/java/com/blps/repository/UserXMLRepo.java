@@ -12,12 +12,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Component
 public class UserXMLRepo {
 
-    private String crutchPath = "./crutch";
+    private final String crutchPath = "./crutch";
 
     public UserXMLRepo() {
         File crutchDir = new File(crutchPath);
@@ -82,7 +83,7 @@ public class UserXMLRepo {
                         return null;
                     }
                 })
-                .filter(user -> user != null)
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
 

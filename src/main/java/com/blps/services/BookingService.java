@@ -18,6 +18,7 @@ public class BookingService {
     @Autowired
     private BookingRepository bookingRepository;
 
+
     @Transactional(transactionManager = "transactionManager")
     public boolean bookFlatByAdvertId(BookingRequest bookingRequest, Long advertId, User user){
         Booking booking = createBooking(bookingRequest, user.getId());
@@ -35,7 +36,7 @@ public class BookingService {
         return true;
     }
 
-
+    @Transactional(transactionManager = "transactionManager")
     public Booking createBooking(@NonNull BookingRequest bookingRequest, Long buyer_id){
         Booking booking = new Booking();
         booking.setAdvert_id(bookingRequest.getAdvert_id());
