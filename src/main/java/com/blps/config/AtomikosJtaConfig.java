@@ -16,14 +16,14 @@ public class AtomikosJtaConfig {
     @Bean(name = "userTransaction")
     public UserTransaction userTransaction() throws Throwable {
         UserTransactionImp userTransactionImp = new UserTransactionImp();
-        userTransactionImp.setTransactionTimeout(300);
+        userTransactionImp.setTransactionTimeout(300); // Установка таймаута транзакции
         return userTransactionImp;
     }
 
     @Bean(name = "atomikosTransactionManager")
     public UserTransactionManager atomikosTransactionManager() throws Throwable {
         UserTransactionManager manager = new UserTransactionManager();
-        manager.setForceShutdown(true);
+        manager.setForceShutdown(true);  // Принудительное завершение транзакций при выключении
         return manager;
     }
 
@@ -31,4 +31,6 @@ public class AtomikosJtaConfig {
     public JtaTransactionManager transactionManager() throws Throwable {
         UserTransaction userTransaction = userTransaction();
         UserTransactionManager atomikosTransactionManager = atomikosTransactionManager();
-        return
+        return new JtaTransactionManager(userTransaction, atomikosTransactionManager);
+    }
+}
