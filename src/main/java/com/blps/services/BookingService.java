@@ -1,6 +1,5 @@
 package com.blps.services;
 
-import com.blps.entity.Advertisement;
 import com.blps.entity.Booking;
 import com.blps.entity.User;
 import com.blps.model.BookingRequest;
@@ -15,12 +14,16 @@ import java.util.Optional;
 
 @Service
 public class BookingService {
-    @Autowired
-    private BookingRepository bookingRepository;
 
+    private final BookingRepository bookingRepository;
+
+    @Autowired
+    public BookingService(BookingRepository bookingRepository) {
+        this.bookingRepository = bookingRepository;
+    }
 
     @Transactional(transactionManager = "transactionManager")
-    public boolean bookFlatByAdvertId(BookingRequest bookingRequest, Long advertId, User user){
+    public boolean bookFlatByAdvertId(BookingRequest bookingRequest, Long advertId, User user) {
         Booking booking = createBooking(bookingRequest, user.getId());
         List<Booking> list = bookingRepository.findBookingByAdvert(advertId);
 
@@ -36,8 +39,8 @@ public class BookingService {
         return true;
     }
 
-    @Transactional(transactionManager = "transactionManager")
-    public Booking createBooking(@NonNull BookingRequest bookingRequest, Long buyer_id){
+    @Transactional
+    public Booking createBooking(@NonNull BookingRequest bookingRequest, Long buyer_id) {
         Booking booking = new Booking();
         booking.setAdvert_id(bookingRequest.getAdvert_id());
         booking.setBuyer_id(buyer_id);
@@ -49,50 +52,47 @@ public class BookingService {
         return booking;
     }
 
-    public void save(Booking booking){
+    @Transactional
+    public void save(Booking booking) {
         bookingRepository.save(booking);
     }
 
-    public boolean checkExistence(Long id){
-        Optional<Booking> opt = bookingRepository.findById(id);
-        if(opt.isPresent()){
-            return true;
-        }
-        else {
-            return false;
-        }
+    @Transactional(readOnly = true)
+    public boolean checkExistence(Long id) {
+        return bookingRepository.existsById(id);
     }
 
-    @Transactional(transactionManager = "transactionManager")
-    public boolean rejectBooking(Long id){
+    @Transactional
+    public boolean rejectBooking(Long id) {
         Booking booking = bookingRepository.getById(id);
-        if(booking.isApproved()){
+        if (booking.isApproved()) {
             booking.setApproved(false);
+            bookingRepository.save(booking);
             return true;
-        }
-        else
+        } else {
             return false;
+        }
     }
 
-
-    public void setApproved(Booking booking, boolean approved){
+    @Transactional
+    public void setApproved(Booking booking, boolean approved) {
         booking.setApproved(approved);
         bookingRepository.save(booking);
     }
 
-    public void checkedIn(Booking booking){
+    @Transactional
+    public void checkedIn(Booking booking) {
         booking.setCheckedIn(true);
         bookingRepository.save(booking);
     }
 
-    public List<Booking> getAllBookings(long owner_id){
+    @Transactional(readOnly = true)
+    public List<Booking> getAllBookings(long owner_id) {
         return bookingRepository.findBookingsByOwnerIdAndConditions(owner_id);
     }
 
-    public Booking getBooking(long booking_id){
+    @Transactional(readOnly = true)
+    public Booking getBooking(long booking_id) {
         return bookingRepository.getById(booking_id);
     }
-
-
-
 }

@@ -1,12 +1,12 @@
 package com.blps.services;
 
-import com.blps.entity.Role;
 import com.blps.entity.User;
 import com.blps.repository.UserXMLRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AuthService {
@@ -22,7 +22,6 @@ public class AuthService {
         return new User(credentials[0], credentials[1]);
     }
 
-
     public boolean authenticateUser(User user) {
         try {
             User foundByUsername = userRepository.findByUsername(user.getUsername());
@@ -32,16 +31,14 @@ public class AuthService {
         }
     }
 
+    @Transactional(transactionManager = "transactionManager")
     public boolean registerUser(User user) {
-
         User u = userRepository.findByUsername(user.getUsername());
-        if(u == null){
+        if (u == null) {
             userRepository.save(new User(user.getUsername(), passwordEncoder.encode(user.getPassword()), user.getRole()));
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
-
 }

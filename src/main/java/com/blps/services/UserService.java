@@ -7,6 +7,7 @@ import com.blps.repository.UserXMLRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserService {
@@ -14,6 +15,7 @@ public class UserService {
     @Autowired
     UserXMLRepo userRepository;
 
+    @Transactional(readOnly = true)
     public User loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username);
         if (user == null) {
@@ -23,11 +25,13 @@ public class UserService {
         return user;
     }
 
-    public User createUserFromRequest(UserRequest userRequest){
+    @Transactional(transactionManager = "transactionManager")
+    public User createUserFromRequest(UserRequest userRequest) {
         return new User(userRequest.getUsername(), userRequest.getPassword());
     }
 
-    public User createUserWithRoleFromRequest(UserRequestWithRole userRequestWithRole){
+    @Transactional(transactionManager = "transactionManager")
+    public User createUserWithRoleFromRequest(UserRequestWithRole userRequestWithRole) {
         return new User(userRequestWithRole.getUsername(), userRequestWithRole.getPassword(),
                 userRequestWithRole.getRole());
     }
