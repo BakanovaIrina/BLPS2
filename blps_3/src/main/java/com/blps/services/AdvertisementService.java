@@ -70,4 +70,20 @@ public class AdvertisementService {
             return false;
         }
     }
+
+    public Advertisement processAdvertisement(AdvertisementRequest request) {
+        Advertisement advertisement = new Advertisement();
+        advertisement.setTitle(request.getTitle());
+        advertisement.setDescription(request.getDescription());
+        advertisement.setPrice(request.getPrice());
+
+        advertisementRepository.save(advertisement);
+
+        // Start Camunda process
+        Map<String, Object> variables = new HashMap<>();
+        variables.put("advertisementId", advertisement.getId());
+        runtimeService.startProcessInstanceByKey("advertisementProcess", variables);
+
+        return advertisement;
+    }
 }

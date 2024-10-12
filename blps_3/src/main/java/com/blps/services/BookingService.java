@@ -112,4 +112,23 @@ public class BookingService {
         bookingRepository.save(booking);
     }
 
+
+    @Transactional
+    public void processBooking(BookingRequest request) {
+        Booking booking = new Booking();
+        booking.setUser(request.getUser());
+        booking.setAdvertisement(request.getAdvertisement());
+        booking.setStartDate(new Timestamp(System.currentTimeMillis()));
+        booking.setEndDate(request.getEndDate());
+
+        bookingRepository.save(booking);
+
+        // Start Camunda process
+        Map<String, Object> variables = new HashMap<>();
+        variables.put("bookingId", booking.getId());
+        variables.put("userId", booking.getUser().getId());
+        runtimeService.startProcessInstanceByKey("bookingProcess", variables);
+    }
+}
+
 }
