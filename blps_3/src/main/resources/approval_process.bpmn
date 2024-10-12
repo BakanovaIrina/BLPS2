@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+             xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC"
+             xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:camunda="http://camunda.org/schema/1.0/bpmn"
+             targetNamespace="http://bpmn.io/schema/bpmn"
+             xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
+
+    <process id="approvalProcess" isExecutable="true">
+        <startEvent id="StartEvent" name="Approve Booking">
+            <outgoing>Flow_1</outgoing>
+        </startEvent>
+
+        <userTask id="userTask1" name="Approve or Reject Booking" camunda:formKey="embedded:app:forms/approval-form.html">
+            <extensionElements>
+                <camunda:formData>
+                    <camunda:formField id="approvalDecision" label="Approval Decision" type="boolean" />
+                </camunda:formData>
+            </extensionElements>
+            <incoming>Flow_1</incoming>
+            <outgoing>Flow_2</outgoing>
+        </userTask>
+
+        <exclusiveGateway id="Gateway_1" name="Approved?">
+            <incoming>Flow_2</incoming>
+            <outgoing>Flow_approved</outgoing>
+            <outgoing>Flow_rejected</outgoing>
+        </exclusiveGateway>
+
+        <serviceTask id="sendApprovalNotificationTask" name="Send Approval Notification" camunda:delegateExpression="${notificationService.sendApproval}">
+            <incoming>Flow_approved</incoming>
+            <outgoing>Flow_3</outgoing>
+        </serviceTask>
+
+        <serviceTask id="sendRejectionNotificationTask" name="Send Rejection Notification" camunda:delegateExpression="${notificationService.sendRejection}">
+            <incoming>Flow_rejected</incoming>
+            <outgoing>Flow_4</outgoing>
+        </serviceTask>
+
+        <endEvent id="EndEvent_approved" name="Booking Approved">
+            <incoming>Flow_3</incoming>
+        </endEvent>
+
+        <endEvent id="EndEvent_rejected" name="Booking Rejected">
+            <incoming>Flow_4</incoming>
+        </endEvent>
+
+        <sequenceFlow id="Flow_1" sourceRef="StartEvent" targetRef="userTask1" />
+        <sequenceFlow id="Flow_2" sourceRef="userTask1" targetRef="Gateway_1" />
+        <sequenceFlow id="Flow_approved" sourceRef="Gateway_1" targetRef="sendApprovalNotificationTask" />
+        <sequenceFlow id="Flow_rejected" sourceRef="Gateway_1" targetRef="sendRejectionNotificationTask" />
+        <sequenceFlow id="Flow_3" sourceRef="sendApprovalNotificationTask" targetRef="EndEvent_approved" />
+        <sequenceFlow id="Flow_4" sourceRef="sendRejectionNotificationTask" targetRef="EndEvent_rejected" />
+    </process>
+
+    <bpmndi:BPMNDiagram id="BPMNDiagram_approvalProcess">
+        <bpmndi:BPMNPlane id="BPMNPlane_approvalProcess" bpmnElement="approvalProcess">
+            <bpmndi:BPMNShape id="StartEvent_1_di" bpmnElement="StartEvent">
+                <omgdc:Bounds x="173" y="102" width="36" height="36" />
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="UserTask_1_di" bpmnElement="userTask1">
+                <omgdc:Bounds x="273" y="102" width="100" height="80" />
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="Gateway_1_di" bpmnElement="Gateway_1">
+                <omgdc:Bounds x="433" y="120" width="50" height="50" />
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="ServiceTask_1_di" bpmnElement="sendApprovalNotificationTask">
+                <omgdc:Bounds x="523" y="102" width="100" height="80" />
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="ServiceTask_2_di" bpmnElement="sendRejectionNotificationTask">
+                <omgdc:Bounds x="523" y="182" width="100" height="80" />
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="EndEvent_1_di" bpmnElement="EndEvent_approved">
+                <omgdc:Bounds x="673" y="102" width="36" height="36" />
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="EndEvent_2_di" bpmnElement="EndEvent_rejected">
+                <omgdc:Bounds x="673" y="182" width="36" height="36" />
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge id="Flow_1_di" bpmnElement="Flow_1">
+                <omgdi:waypoint x="209" y="120" />
+                <omgdi:waypoint x="273" y="120" />
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="Flow_2_di" bpmnElement="Flow_2">
+                <omgdi:waypoint x="373" y="120" />
+                <omgdi:waypoint x="433" y="120" />
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="Flow_approved_di" bpmnElement="Flow_approved">
+                <omgdi:waypoint x="483" y="120" />
+                <omgdi:waypoint x="523" y="120" />
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="Flow_rejected_di" bpmnElement="Flow_rejected">
+                <omgdi:waypoint x="483" y="170" />
+                <omgdi:waypoint x="523" y="170" />
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="Flow_3_di" bpmnElement="Flow_3">
+                <omgdi:waypoint x="623" y="120" />
+                <omgdi:waypoint x="673" y="120" />
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="Flow_4_di" bpmnElement="Flow_4">
+                <omgdi:waypoint x="623" y="170" />
+                <omgdi:waypoint x="673" y="170" />
+            </bpmndi:BPMNEdge>
+        </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
+</definitions>
