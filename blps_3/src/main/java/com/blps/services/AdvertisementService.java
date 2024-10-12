@@ -73,15 +73,12 @@ public class AdvertisementService  implements JavaDelegate {
 
     @Override
     public void execute(DelegateExecution execution) throws Exception {
-        // Получение данных из переменных процесса
         String adId = (String) execution.getVariable("adId");
         String adDetails = (String) execution.getVariable("adDetails");
 
-        // Логика обработки объявления
         System.out.println("Creating advertisement with ID: " + adId);
         System.out.println("Advertisement details: " + adDetails);
 
-        // Установка переменных
         execution.setVariable("adStatus", "PUBLISHED");
     }
 }
