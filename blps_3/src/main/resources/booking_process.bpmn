@@ -13,12 +13,11 @@
             <outgoing>Flow_1</outgoing>
         </startEvent>
 
-        <userTask id="userTask1" name="Enter Booking Details" camunda:formKey="embedded:app:forms/booking-form.html">
-            <extensionElements>
-                <camunda:formData>
-                    <camunda:formField id="bookingDetails" label="Booking Details" type="string" />
-                </camunda:formData>
-            </extensionElements>
+       <userTask id="userTask1" name="Enter Booking Details" camunda:formKey="embedded:app:forms/booking-form.html">,
+           <userTask id="userTask1" name="Enter Booking Details" camunda:formKey="embedded:app:forms/booking-form.html">
+               <extensionElements>
+                   <camunda:executionListener class="com.blps.services.BookingService" event="end" />
+               </extensionElements>
             <incoming>Flow_1</incoming>
             <outgoing>Flow_2</outgoing>
         </userTask>

@@ -13,7 +13,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class AdvertisementService {
+public class AdvertisementService  implements JavaDelegate {
     @Autowired
     AdvertisementRepository advertisementRepository;
 
@@ -71,19 +71,17 @@ public class AdvertisementService {
         }
     }
 
-    public Advertisement processAdvertisement(AdvertisementRequest request) {
-        Advertisement advertisement = new Advertisement();
-        advertisement.setTitle(request.getTitle());
-        advertisement.setDescription(request.getDescription());
-        advertisement.setPrice(request.getPrice());
+    @Override
+    public void execute(DelegateExecution execution) throws Exception {
+        // Получение данных из переменных процесса
+        String adId = (String) execution.getVariable("adId");
+        String adDetails = (String) execution.getVariable("adDetails");
 
-        advertisementRepository.save(advertisement);
+        // Логика обработки объявления
+        System.out.println("Creating advertisement with ID: " + adId);
+        System.out.println("Advertisement details: " + adDetails);
 
-        // Start Camunda process
-        Map<String, Object> variables = new HashMap<>();
-        variables.put("advertisementId", advertisement.getId());
-        runtimeService.startProcessInstanceByKey("advertisementProcess", variables);
-
-        return advertisement;
+        // Установка переменных
+        execution.setVariable("adStatus", "PUBLISHED");
     }
 }

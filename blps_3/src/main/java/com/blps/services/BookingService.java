@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class BookingService {
+public class BookingService implements JavaDelegate {
     @Autowired
     private BookingRepository bookingRepository;
 
@@ -113,22 +113,17 @@ public class BookingService {
     }
 
 
-    @Transactional
-    public void processBooking(BookingRequest request) {
-        Booking booking = new Booking();
-        booking.setUser(request.getUser());
-        booking.setAdvertisement(request.getAdvertisement());
-        booking.setStartDate(new Timestamp(System.currentTimeMillis()));
-        booking.setEndDate(request.getEndDate());
+    @Override
+    public void execute(DelegateExecution execution) throws Exception {
+        // Получение переменных из процесса
+        String bookingId = (String) execution.getVariable("bookingId");
+        String customerName = (String) execution.getVariable("customerName");
 
-        bookingRepository.save(booking);
+        // Логика обработки бронирования
+        System.out.println("Processing booking for customer: " + customerName + " with ID: " + bookingId);
 
-        // Start Camunda process
-        Map<String, Object> variables = new HashMap<>();
-        variables.put("bookingId", booking.getId());
-        variables.put("userId", booking.getUser().getId());
-        runtimeService.startProcessInstanceByKey("bookingProcess", variables);
+        // Установка дополнительных переменных
+        execution.setVariable("bookingStatus", "CONFIRMED");
     }
-}
 
 }
