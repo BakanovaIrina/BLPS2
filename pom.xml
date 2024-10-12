@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.example</groupId>
-    <artifactId>backend4</artifactId>
+    <artifactId>bpls4</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>backend4</name>
     <description>backend4</description>
@@ -63,10 +63,13 @@
             <artifactId>spring-boot-starter-jta-atomikos</artifactId>
             <version>2.7.18</version>
         </dependency>
+        <dependency>
+            <groupId>org.camunda.bpm.springboot</groupId>
+            <artifactId>camunda-bpm-spring-boot-starter-webapp</artifactId>
+            <version>7.22.0</version>
+        </dependency>
+
     </dependencies>
-
-
-
 
     <build>
         <plugins>
