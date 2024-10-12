@@ -115,14 +115,11 @@ public class BookingService implements JavaDelegate {
 
     @Override
     public void execute(DelegateExecution execution) throws Exception {
-        // Получение переменных из процесса
         String bookingId = (String) execution.getVariable("bookingId");
         String customerName = (String) execution.getVariable("customerName");
 
-        // Логика обработки бронирования
         System.out.println("Processing booking for customer: " + customerName + " with ID: " + bookingId);
 
-        // Установка дополнительных переменных
         execution.setVariable("bookingStatus", "CONFIRMED");
     }
 
